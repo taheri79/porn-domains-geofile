@@ -22,6 +22,8 @@ jobs:
         run: |
           git clone https://github.com/v2fly/domain-list-community.git dlc-src
           cd dlc-src
+          go mod tidy
+          go mod download
           go build -o ../dlc ./cmd/domain-list-compiler
           cd ..
 
