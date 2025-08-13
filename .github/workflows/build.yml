@@ -63,4 +63,4 @@ jobs:
           tag_name: v1.0.${{ github.run_number }}
           name: "Porn Blocklist Dat Build ${{ github.run_number }}"
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
