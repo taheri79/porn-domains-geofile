@@ -22,8 +22,7 @@ jobs:
         run: |
           git clone https://github.com/v2fly/domain-list-community.git dlc-src
           cd dlc-src
-          go build ./cmd/dlc
-          mv dlc ../dlc
+          go build -o ../dlc ./cmd/domain-list-compiler
           cd ..
 
       - name: Get blocklist filename from meta.json
