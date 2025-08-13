@@ -48,17 +48,17 @@ jobs:
           cd dlc-src
           ../dlc
           cd ..
-          mv dlc-src/geosite.dat geosite.dat
+          mv dlc-src/dlc.dat porn.dat
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: geosite.dat
-          path: geosite.dat
+          name: porn.dat
+          path: porn.dat
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: geosite.dat
+          files: porn.dat
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
