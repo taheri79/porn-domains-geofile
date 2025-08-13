@@ -1,0 +1,63 @@
+name: Build geosite.dat with porn domains
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 0" # Every Sunday
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+
+      - name: Clone domain-list-community
+        run: |
+          git clone https://github.com/v2fly/domain-list-community.git dlc-src
+          cd dlc-src
+          go build ./cmd/dlc
+          mv dlc ../dlc
+          cd ..
+
+      - name: Get blocklist filename from meta.json
+        run: |
+          curl -sL https://raw.githubusercontent.com/Bon-Appetit/porn-domains/main/meta.json > meta.json
+          BLOCKLIST_FILE=$(jq -r '.blocklist.name' meta.json)
+          echo "BLOCKLIST_FILE=$BLOCKLIST_FILE" >> $GITHUB_ENV
+
+      - name: Download porn blocklist
+        run: |
+          mkdir -p data
+          curl -sL "https://raw.githubusercontent.com/Bon-Appetit/porn-domains/main/$BLOCKLIST_FILE" > data/porn
+          sed -i '/^#/d;/^$/d' data/porn  # Remove comments and blank lines
+
+      - name: Copy custom list into DLC data
+        run: |
+          cp data/porn dlc-src/data/porn
+
+      - name: Build geosite.dat
+        run: |
+          cd dlc-src
+          ../dlc
+          cd ..
+          mv dlc-src/geosite.dat geosite.dat
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: geosite.dat
+          path: geosite.dat
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: geosite.dat
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
