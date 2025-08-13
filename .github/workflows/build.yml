@@ -60,5 +60,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: porn.dat
+          tag_name: v1.0.${{ github.run_number }}
+          name: "Porn Blocklist Dat Build ${{ github.run_number }}"
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
