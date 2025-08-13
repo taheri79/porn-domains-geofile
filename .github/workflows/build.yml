@@ -24,7 +24,7 @@ jobs:
           cd dlc-src
           go mod tidy
           go mod download
-          go build -o ../dlc ./cmd/domain-list-compiler
+          go build -o ../dlc
           cd ..
 
       - name: Get blocklist filename from meta.json
