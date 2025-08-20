@@ -25,7 +25,6 @@ jobs:
           cd dlc-src
           go mod tidy
           go mod download
-          go build -o ../dlc
           cd ..
 
       - name: Get blocklist filename from meta.json
@@ -40,14 +39,10 @@ jobs:
           curl -sL "https://raw.githubusercontent.com/Bon-Appetit/porn-domains/main/$BLOCKLIST_FILE" > data/porn
           sed -i '/^#/d;/^$/d' data/porn  # Remove comments and blank lines
 
-      - name: Copy custom list into DLC data
-        run: |
-          cp data/porn dlc-src/data/porn
-
       - name: Build geosite.dat
         run: |
           cd dlc-src
-          ../dlc
+          go run ./ --datapath=../data/porn
           cd ..
           mv dlc-src/dlc.dat porn.dat
 
